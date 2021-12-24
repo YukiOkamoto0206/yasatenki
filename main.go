@@ -18,8 +18,10 @@ func main() {
 		os.Getenv("LINE_BOT_CHANNEL_TOKEN"),
 	)
 	result := weather.GetWeather()
-	message := linebot.NewTextMessage(result)
-	if _, err := bot.BroadcastMessage(message).Do(); err != nil {
-		log.Fatal(err)
+	if result != "" {
+		message := linebot.NewTextMessage(result)
+		if _, err := bot.BroadcastMessage(message).Do(); err != nil {
+			log.Fatal(err)
+		}
 	}
 }

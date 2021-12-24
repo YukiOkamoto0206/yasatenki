@@ -2,15 +2,26 @@ package weather
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type Weather struct {
-	Area string `json:"targetArea"`
-	Body string `json:"text"`
+	ReportDatetime string    `json:"reportDatetime"`
+	TimeSeries     []OneTime `json:"timeSeries"`
+}
+
+type OneTime struct {
+	TimeDefines []string `json:"timeDefines"`
+	Areas       []Area   `json:"areas"`
+}
+
+type Area struct {
+	AreaName    string   `json:"areaame"`
+	Weathers    []string `json:"weathers"`
+	Temperature []string `json:"temps"`
 }
 
 //func main() {
@@ -19,18 +30,8 @@ type Weather struct {
 //}
 
 func GetWeather() string {
-	jsonStr := httpGetStr("https://www.jma.go.jp/bosai/forecast/data/overview_forecast/340000.json")
-	weather := formatWeather(jsonStr)
-
-	area := fmt.Sprintf("%sの天気\n", weather.Area)
-	body := fmt.Sprintf("%s\n", weather.Body)
-	result := area + body
-
-	return result
-}
-
-func httpGetStr(url string) string {
-	// httpリクエストを発行しレスポンスを取得する
+	//jsonStr := httpGetStr(
+	url := "https://www.jma.go.jp/bosai/forecast/data/forecast/340000.json"
 	response, err := http.Get(url)
 	if err != nil {
 		log.Fatal("Get Http Error:", err)
@@ -42,13 +43,46 @@ func httpGetStr(url string) string {
 	}
 	// 読み込み終わったらレスポンスボディを閉じる
 	defer response.Body.Close()
-	return string(body)
+	info := make([]*Weather, 0)
+	err = json.Unmarshal(body, &info)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	weather := info[0].TimeSeries[0].Areas[0].Weathers[0]
+
+	if strings.ContainsAny(weather, "雨") {
+		return "今日は雨です！"
+	}
+	//area := fmt.Sprintf("%sの天気\n", weather.ReportDatetime)
+	//body := fmt.Sprintf("%s\n", weather.TimeSeries[0].Areas[0].Weathers[0])
+	//result := area + body
+	//
+	return ""
 }
 
-func formatWeather(str string) *Weather {
-	weather := new(Weather)
-	if err := json.Unmarshal([]byte(str), weather); err != nil {
-		log.Fatal("JSON Unmarshal error:", err)
-	}
-	return weather
-}
+//func httpGetStr(url string) string {
+//	// httpリクエストを発行しレスポンスを取得する
+//	response, err := http.Get(url)
+//	if err != nil {
+//		log.Fatal("Get Http Error:", err)
+//	}
+//	// レスポンスボディを読み込む
+//	body, err := io.ReadAll(response.Body)
+//	if err != nil {
+//		log.Fatal("IO Read Error:", err)
+//	}
+//	// 読み込み終わったらレスポンスボディを閉じる
+//	defer response.Body.Close()
+//	return string(body)
+//}
+//
+//func formatWeather(str string) *Weather {
+//	result := make([]*Weather, 0)
+//	err := json.Unmarshal(body, &result)
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//
+//	//return weather
+//}
