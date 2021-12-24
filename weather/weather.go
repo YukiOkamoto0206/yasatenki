@@ -30,7 +30,6 @@ type Area struct {
 //}
 
 func GetWeather() string {
-	//jsonStr := httpGetStr(
 	url := "https://www.jma.go.jp/bosai/forecast/data/forecast/340000.json"
 	response, err := http.Get(url)
 	if err != nil {
@@ -54,35 +53,6 @@ func GetWeather() string {
 	if strings.ContainsAny(weather, "雨") {
 		return "今日は雨です！\n傘を忘れずに持っていきましょう！！"
 	}
-	//area := fmt.Sprintf("%sの天気\n", weather.ReportDatetime)
-	//body := fmt.Sprintf("%s\n", weather.TimeSeries[0].Areas[0].Weathers[0])
-	//result := area + body
-	//
+
 	return ""
 }
-
-//func httpGetStr(url string) string {
-//	// httpリクエストを発行しレスポンスを取得する
-//	response, err := http.Get(url)
-//	if err != nil {
-//		log.Fatal("Get Http Error:", err)
-//	}
-//	// レスポンスボディを読み込む
-//	body, err := io.ReadAll(response.Body)
-//	if err != nil {
-//		log.Fatal("IO Read Error:", err)
-//	}
-//	// 読み込み終わったらレスポンスボディを閉じる
-//	defer response.Body.Close()
-//	return string(body)
-//}
-//
-//func formatWeather(str string) *Weather {
-//	result := make([]*Weather, 0)
-//	err := json.Unmarshal(body, &result)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	//return weather
-//}
