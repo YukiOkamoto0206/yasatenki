@@ -52,7 +52,7 @@ func GetWeather() string {
 	weather := info[0].TimeSeries[0].Areas[0].Weathers[0]
 
 	if strings.ContainsAny(weather, "雨") {
-		return "今日は雨です！"
+		return "今日は雨です！\n傘を忘れずに持っていきましょう！！"
 	}
 	//area := fmt.Sprintf("%sの天気\n", weather.ReportDatetime)
 	//body := fmt.Sprintf("%s\n", weather.TimeSeries[0].Areas[0].Weathers[0])
