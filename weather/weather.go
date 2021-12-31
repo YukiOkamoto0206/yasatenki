@@ -50,6 +50,9 @@ func GetWeather() string {
 
 	weather := info[0].TimeSeries[0].Areas[0].Weathers[0]
 
+	if strings.ContainsAny(weather, "雪") {
+		return "今日は雪です！\n非常に冷え込むので防寒対策しましょう！！"
+	}
 	if strings.ContainsAny(weather, "雨") {
 		return "今日は雨です！\n傘を忘れずに持っていきましょう！！"
 	}
